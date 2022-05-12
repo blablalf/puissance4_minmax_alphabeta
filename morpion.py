@@ -153,27 +153,33 @@ def utility(state, weight=-1, next_is_us=0):
                 weight_sum += weight_utility(cordinate, next_is_us, state, line_index, column_index)
            # RISING DIAGONALS
             if column_index < 9 and line_index > 2:
-                cordinate = (state[line_index, column_index], state[line_index - 1, column_index + 1], state[line_index - 2, column_index + 2], state[line_index - 3, column_index + 3], 'RISING DIAGONALS')
+                cordinate = (state[line_index, column_index], state[line_index - 1, column_index + 1], state[line_index - 2, column_index + 2], state[line_index - 3, column_index + 3],
+                     'RISING DIAGONALS')
                 weight_sum += weight_utility(cordinate, next_is_us, state, line_index, column_index)
            # DESCENDING DIAGONALS
             if column_index < 9 and line_index < 3:
-                cordinate = (state[line_index, column_index], state[line_index + 1, column_index + 1], state[line_index + 2, column_index + 2], state[line_index + 3, column_index + 3], 'DESCENDING DIAGONALS')
+                cordinate = (state[line_index, column_index], state[line_index + 1, column_index + 1], state[line_index + 2, column_index + 2], state[line_index + 3, column_index + 3],
+                     'DESCENDING DIAGONALS')
                 weight_sum += weight_utility(cordinate, next_is_us, state, line_index, column_index)
 
     return weight_sum
     
-#minmax decision function
-#Fonction qui nous retourne le meilleur coup à joueur
+# Mmiinmax decision function
+# Feature that maximizes AI hit
 def minmax(state):
     a = get_free_columns(state)
     return max(a, key=lambda x: min_value(get_simulated_state_move(state, x), move_nonce))
 
-#Max_ val function
+# Max_ val function
+# 
 def max_value(state, move_nonce=1, depth=1):
+    # Test if the hit is a winning hit
     terminal_result = terminal_test(state, move_nonce)
+    # If their is a winning hit, he going to calculate the next best hit to win or to equality
     if terminal_result[0] or depth >= depth_limit:
         return utility(state, terminal_result[1], 1)
     value = -10000000
+    # If the next hit is not winning, he looking for the maximize node
     for a in get_free_columns(state):
         global player_minmax
         player_minmax = 1
@@ -182,10 +188,13 @@ def max_value(state, move_nonce=1, depth=1):
     
 #Min_val function
 def min_value(state, move_nonce=1, depth=1):
+    # Test if the hit is a winning hit
     terminal_result = terminal_test(state, move_nonce)
+    # If their is a winning hit, he going to calculate the next best hit to win or to equality
     if terminal_result[0] or depth >= depth_limit:
         return utility(state, terminal_result[1], 0)
     value = 10000000
+    # If the next hit is not winning, he looking for the miximizes node with a defined depth+1 
     for a in get_free_columns(state):
         global player_minmax
         player_minmax = 2
